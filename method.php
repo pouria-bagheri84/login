@@ -1,10 +1,12 @@
 <?php
 include "config/configure.php";
     function sing_in($data){
-
+        // get $ validation data in variable
         $username = validate($data['username']);
         $email = validate($data['email']);
         $password = validate($data['password']);
+
+        // checking username $email
 
         if (checkUsername($username)) {
             echo '<div class="alert alert-warning" role="alert">Username Exist!</div>';
@@ -16,7 +18,9 @@ include "config/configure.php";
             die;
         }
 
+        // hashing password 
         $password = sha1($password . SALT);
+
         $db = DBconnection();
         $sql = "INSERT INTO users_tbl (username, email, password) VALUES('$username', '$email', '$password')";
         $result = mysqli_query($db, $sql);
@@ -31,6 +35,7 @@ include "config/configure.php";
 
     function login($data)
     {
+        // get $ validation data in variable
         $email = validate($data['email']);
         $password = validate($data['password']);
 
@@ -45,6 +50,7 @@ include "config/configure.php";
         $result = mysqli_query($dbs, $sql);
         $row = mysqli_fetch_assoc($result);
 
+        // checking exist the password in database or no
         if (sha1($password.SALT) != $row['password']) {
             echo '<div class="alert alert-danger" role="alert">Invalid username or password!</div>';
             die;
@@ -54,6 +60,7 @@ include "config/configure.php";
         header("Location: chooseUserOrAdmin.php");
     }
 
+    // validating data
     function validate($data){
     
         $data = trim($data);
@@ -62,6 +69,7 @@ include "config/configure.php";
         return $data;
     }
 
+    // connecting in database
     function DBconnection()
     {
         $host = DB_HOST;
@@ -78,6 +86,7 @@ include "config/configure.php";
         return $connection;
     }
 
+    // checking username
     function checkUsername($username)
     {
         $username = validate($username);
@@ -91,6 +100,8 @@ include "config/configure.php";
             return false;
         }
     }
+
+    // checking email
     function checkEmail($email)
     {
         $email = validate($email);
